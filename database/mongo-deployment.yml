@@ -17,12 +17,39 @@ spec:
     spec:
       containers:
         - name: mongo-desert21
-          image: mongo:6.0.1
+          image: registry.digitalocean.com/desert-21-container-registry/mongo-db:latest
           ports:
           - containerPort: 27017
           volumeMounts:
           - mountPath: "/data"
             name: mongo-db-volume
+          env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: MONGO_USERNAME
+                optional: false
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: MONGO_PASSWORD
+                optional: false
+          - name: MONGO_INITDB_DATABASE
+            value: desert21
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: DATABASE_USERNAME
+                optional: false
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: DATABASE_PASSWORD
+                optional: false
       volumes:
         - name: mongo-db-volume
           persistentVolumeClaim:
